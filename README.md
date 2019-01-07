@@ -1,0 +1,1 @@
+This folder contains work with respect to 3D reconstruction with structured light
