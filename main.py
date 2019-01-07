@@ -9,5 +9,6 @@ def main():
     line.generate_moving_line('bl_diag')
     print('genaration done')
 
+
 if __name__=='__main__':
     main()

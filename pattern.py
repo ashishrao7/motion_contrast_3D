@@ -47,4 +47,7 @@ class Line(Pattern):
                 self.video.write(frame) 
 
 class sinusoid_2d(Pattern):
+    # generate moving gray code , binary code and phase shifting patterns 
+    # check what they mean by 2D - sinusoidal patterns
+    
     pass
