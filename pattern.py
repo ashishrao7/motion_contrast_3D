@@ -16,7 +16,18 @@ class Line(Pattern):
         self.thickness = thickness
 
     def generate_moving_line(self, type):
-        self.video = VideoWriter('./videos/' + type + '_pattern_gen.avi', self.fourcc, float(self.fps), (self.width, self.height))
+        '''
+            Generate moving line whose direction is defined by the variable type
+        
+        Parameters:
+        -----------
+            type: <string>
+                Defines the direction in which the line has to move
+
+        Return: None
+        -------
+        '''
+        self.video = VideoWriter('./videos/' + type + '_pattern_gen_'+str(self.thickness)+'_bit.avi', self.fourcc, float(self.fps), (self.width, self.height))
         
         if type=='vertical':
             print('generating video of vertical line')
@@ -49,5 +60,5 @@ class Line(Pattern):
 class sinusoid_2d(Pattern):
     # generate moving gray code , binary code and phase shifting patterns 
     # check what they mean by 2D - sinusoidal patterns
-    
+
     pass
