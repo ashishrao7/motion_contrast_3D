@@ -1,6 +1,6 @@
 # Motion Contrast 3D Scanning
 
-This repo contains implementation of the motion contrast 3-D Scanning method proposed by <a href="http://compphotolab.northwestern.edu/wordpress/wp-content/uploads/2015/04/dvs_031.pdf"> Matsuda et. al</a>. 
+This repo contains implementation of the motion contrast 3-D Scanning method proposed by <a href="http://compphotolab.northwestern.edu/wordpress/wp-content/uploads/2015/04/dvs_031.pdf"> Matsuda et. al</a>. Check out the project page <a href=http://compphotolab.northwestern.edu/project/mc3d-motion-contrast-3d-laser-scanner/>here</a> and the video to the project <a href=https://vimeo.com/125511538>here</a>.
 
 The data in the experiments folder have been collected from a DAVIS346 Camera. The drivers developed by the robotics and perception group were used to collect data from the DAVIS. 
 
