@@ -1,3 +1,5 @@
+# This file defines the pattern generator used in the experiment
+
 import cv2
 import numpy as np
 from cv2 import VideoWriter, VideoWriter_fourcc
