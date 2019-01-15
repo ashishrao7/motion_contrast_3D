@@ -4,7 +4,9 @@ This repo contains implementation of the motion contrast 3-D Scanning method pro
 
 The data in the experiments folder have been collected from a DAVIS346 Camera. The drivers developed by the robotics and perception group were used to collect data from the DAVIS. 
 
-An object is placed on a platform and a moving light source generated in `generator.py` is made to fall on the object. The event camera placed in a stereo configuration with the <a href="http://www.ti.com/tool/DLPLCR4500EVM">light projector</a> records the bending of the incident light and uses this to calculate the depth of the scene.
+An object is placed on a platform and a moving light source generated in `generator.py` is made to fall on the object. The videos folder contains different light sources generated using the generator file.
+
+The event camera placed in a stereo configuration with the <a href="http://www.ti.com/tool/DLPLCR4500EVM">light projector</a> records the bending of the incident light and uses this to calculate the depth of the scene.
 
 
 To understand how events occur in an event based camera, please watch the video at this <a href="https://www.youtube.com/watch?v=kPCZESVfHoQ">link.</a>
