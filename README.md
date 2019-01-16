@@ -6,7 +6,7 @@ The data in the experiments folder have been collected from a DAVIS346 Camera. T
 
 An object is placed on a platform and a moving light source generated in `generator.py` is made to fall on the object. The videos folder contains different light sources generated using the generator file.
 
-The event camera ,placed in a stereo configuration with the <a href="http://www.ti.com/tool/DLPLCR4500EVM">light projector</a> , records the bending of the incident light. This property is used to calculate the depth of the scene specified in more detail the paper.
+The event camera, placed in a stereo configuration with the <a href="http://www.ti.com/tool/DLPLCR4500EVM">light projector</a> ,records the bending of the incident light. This property is used to calculate the depth of the scene specified in more detail in the paper.
 
 
 To understand how events occur in an event based camera, please watch the video at this <a href="https://www.youtube.com/watch?v=kPCZESVfHoQ">link.</a>
