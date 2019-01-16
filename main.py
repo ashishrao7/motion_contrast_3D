@@ -72,11 +72,11 @@ def main():
   camera_dims = (260, 346)  # Dimensions of a DAVIS346
   focal_length = 435  # along y-direction
   baseline = 0.015    # 15 cm baseline was used in the experiment
-  scan_speed = 60     # pixels per second coverge , determined by pattern generatad in generator.py
+  scan_speed = 120     # pixels per second coverge , determined by pattern generatad in generator.py
   
   depth_map = init_depth_map(camera_dims)
   
-  events, start_time = read_data('Bear_exp_1/events.txt')
+  events, start_time = read_data('Buddha_exp_120/events.txt')
   
   for event in events:
     compute_depth(event, depth_map, baseline, focal_length, scan_speed, start_time)
