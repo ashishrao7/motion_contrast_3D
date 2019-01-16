@@ -30,9 +30,9 @@ def compute_depth(event, depth_map, baseline, focal_length, scan_speed, start_ti
     corresponding pixel location. The formula used to calculate depth is the one described in Matsuda et al.
   '''
   time, y, x, _ = event
-  disparity = x - (time-start_time)*scan_speed
+  disparity = y - (time-start_time)*scan_speed     #plotting only disparity for now
   if disparity != 0:
-    depth = (baseline*focal_length) / disparity
+    depth = disparity
 
   else:
     depth = bad_depth   #data is captured for a horizontal line hence x
@@ -60,7 +60,7 @@ def plot_depth_map(depth_map):
   plt.ylim(0, 259)
   image = depth_map
   image = ndimage.rotate(image, 180) 
-  plt.imshow(image)
+  plt.imshow(image, cmap='gray')
   plt.colorbar()
   plt.show()
 
@@ -70,13 +70,13 @@ def convert_to_pcd_and_store(depth_map_matrix):
 def main():
 
   camera_dims = (260, 346)  # Dimensions of a DAVIS346
-  focal_length = 538  # along y-direction
+  focal_length = 435  # along y-direction
   baseline = 0.015    # 15 cm baseline was used in the experiment
   scan_speed = 60     # pixels per second coverge , determined by pattern generatad in generator.py
   
   depth_map = init_depth_map(camera_dims)
   
-  events, start_time = read_data('Experiment-1/events.txt')
+  events, start_time = read_data('Experiment-1_1/events.txt')
   
   for event in events:
     compute_depth(event, depth_map, baseline, focal_length, scan_speed, start_time)
