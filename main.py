@@ -76,7 +76,7 @@ def main():
   
   depth_map = init_depth_map(camera_dims)
   
-  events, start_time = read_data('Experiment-1_1/events.txt')
+  events, start_time = read_data('Bear_exp_1/events.txt')
   
   for event in events:
     compute_depth(event, depth_map, baseline, focal_length, scan_speed, start_time)
