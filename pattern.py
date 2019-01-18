@@ -29,7 +29,7 @@ class Line(Pattern):
         Return: None
         -------
         '''
-        self.video = VideoWriter('./videos/' + type + '_pattern_gen_'+str(self.thickness)+'_bit.avi', self.fourcc, float(self.fps), (self.width, self.height))
+        self.video = VideoWriter('./videos/' + type + '_pattern_gen_'+str(self.fps)+'_bit.avis', self.fourcc, float(self.fps), (self.width, self.height))
         
         if type=='vertical':
             print('generating video of vertical line')

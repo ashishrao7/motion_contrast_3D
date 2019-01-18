@@ -30,12 +30,13 @@ def compute_depth(event, depth_map, baseline, focal_length, scan_speed, start_ti
     corresponding pixel location. The formula used to calculate depth is the one described in Matsuda et al.
   '''
   time, y, x, _ = event
-  disparity = y - (time-start_time)*scan_speed     #plotting only disparity for now
+  disparity = y - (time-start_time)*scan_speed #data is captured for a horizontal line hence x is used as opposed to y
   if disparity != 0:
     depth = disparity
 
   else:
-    depth = bad_depth   #data is captured for a horizontal line hence x
+    depth = bad_depth   
+ 
   #print(y, x, depth)
   depth_map[int(x)][int(y)].append(depth)
 
