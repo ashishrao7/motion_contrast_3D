@@ -1,17 +1,17 @@
 % Projector-Camera Stereo calibration parameters:
 
 % Intrinsic parameters of camera:
-fc_left = [ 1249.648684 1234.768910 ]; % Focal Length
-cc_left = [ 417.646695 379.608321 ]; % Principal point
+fc_left = [ 216.209526 191.092868 ]; % Focal Length
+cc_left = [ 159.932681 122.725949 ]; % Principal point
 alpha_c_left = [ 0.000000 ]; % Skew
-kc_left = [ -0.299573 6.190693 -0.005582 -0.010924 0.000000 ]; % Distortion
+kc_left = [ 0.489428 -4.595708 0.105252 0.020326 0.000000 ]; % Distortion
 
 % Intrinsic parameters of projector:
-fc_right = [ 2022.319155 1881.202963 ]; % Focal Length
-cc_right = [ 379.448877 468.985661 ]; % Principal point
+fc_right = [ 638.132876 588.991972 ]; % Focal Length
+cc_right = [ 521.466459 587.144121 ]; % Principal point
 alpha_c_right = [ 0.000000 ]; % Skew
-kc_right = [ 0.324640 2.959880 0.091444 -0.069673 0.000000 ]; % Distortion
+kc_right = [ 0.061772 -0.172705 0.023018 -0.008527 0.000000 ]; % Distortion
 
 % Extrinsic parameters (position of projector wrt camera):
-om = [ -0.122015 0.004606 -0.001979 ]; % Rotation vector
-T = [ 12.230897 -119.366399 94.031723 ]; % Translation vector
+om = [ 0.354051 -0.104306 -0.021666 ]; % Rotation vector
+T = [ 3.598423 -53.674619 -35.238142 ]; % Translation vector
