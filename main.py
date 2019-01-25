@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from scipy import ndimage
 from mpl_toolkits.mplot3d import Axes3D
 
-bad_depth = 1000 #value set to areas which have 0 disparity or areas for which no disparity has been recorded
+bad_depth = 500 #value set to areas which have 0 disparity or areas for which no disparity has been recorded
 
 def init_depth_map(camera_dims):
   ''' 
@@ -29,20 +29,21 @@ def read_data(path):
 def compute_depth(event, depth_map, baseline, focal_length, scan_speed, start_time, R, t):
   '''
     Compute depth for each pixel in the depth map. Some pixels could have multiple depths due to multiple activations on the event camera. All the possible values are stored as a list in the 
-    corresponding pixel location. The formula used to calculate depth is the one described in Matsuda et al.
+    corresponding pixel loction. The formula used to calculate depth is the one described in Matsuda et al.
   '''
   
-  time, y, x, _ = event
+  time, y, x, _ = event #x and y are interchanged because the convention followed is different
   # Do the rotation translation on point x y and compute disparity
-  im_coord = np.dot(R.T, np.array(([x],[y],[1])) - t) 
+  im_coord = np.dot(R.T, np.array(([x],[y],[1])) - t) + t 
   
-  disparity = (time-start_time)*scan_speed #data is captured for a horizontal line hence x is used as opposed to y
- 
+  disparity = 150*im_coord[0]/(im_coord[2]*focal_length) - (time-start_time)*scan_speed #data is captured for a horizontal line hence x is used as opposed to y
+
   if disparity != 0:
-    depth = disparity
+    depth = focal_length * baseline/disparity
   else:
     depth = bad_depth   
 
+  # print("Time Elapsed:{} Disparity :{} Depth:{}".format(time-start_time, disparity, depth))
   depth_map[int(x)][int(y)].append(depth)
 
 def compute_final_depth_map(depth_map):
@@ -59,14 +60,16 @@ def plot_depth_map(depth_map):
   '''
    Plot image of the final depth map numpy array
   '''
+
   plt.title('Depth Map from Structured lighting')
   plt.ylabel('Camera y co-ord')
   plt.xlabel('Camera x co-ord')
   plt.xlim(0, 345)
   plt.ylim(0, 259)
-  image = (depth_map < 5000)*depth_map
+  image = (depth_map < 800)*depth_map
+  image = (image > 0)*image
   image = ndimage.rotate(image, 180) 
-  plt.imshow(image, cmap='gray')
+  plt.imshow(image)
   plt.colorbar()
   plt.show()
 
@@ -92,21 +95,24 @@ def convert_to_pcd_and_store(depth_map_matrix):
 def main():
 
   camera_dims = (260,346)  # Dimensions of a DAVIS346
-  focal_length = 1250  # along y-direction
-  baseline = 150    # 15 cm baseline was used in the experiment
+  focal_length = 450 # along y-direction
+    # 15 cm baseline was used in the experiment
   scan_speed = 60     # pixels per second coverge , determined by pattern generatad in generator.py
   
-  R = np.array([[ 9.9998744986454580e-01,  1.6931182636345124e-03, 4.7152374222165019e-03], 
-                [-2.2544358986445446e-03,  9.9256343510210054e-01, 1.2170762020965244e-01],
-                [-4.4741068585167285e-03, -1.2171672296304827e-01, 9.9255479532313740e-01]])
+  R = np.array([[0.9910483601989318, -0.001257937490197782, -0.1334974357067545],
+                [-0.05010500313601597, 0.9233539397380011, -0.3806665084178691 ],
+                [0.1237442378769538, 0.3839478083849191, 0.9150253788986781]])
   
-  t = np.array([[ 1.2230896982158434e+01], 
-                [-1.1936639908933516e+02], 
-                [ 9.4031723036298359e+01]])
+  t = np.array([[2.100388684052633],
+               [-54.19534011618826],
+               [-35.31909568783666]])
+
+  baseline = np.linalg.norm(t)
+  print('The baseline is {}'.format(baseline))
 
   depth_map = init_depth_map(camera_dims)
   
-  events, start_time = read_data('Experiment-1/events.txt')
+  events, start_time = read_data('Experiment-1/events copy.txt')
   
   for event in events:
     compute_depth(event, depth_map, baseline, focal_length, scan_speed, start_time, R,t)
