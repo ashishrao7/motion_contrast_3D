@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from scipy import ndimage
 from mpl_toolkits.mplot3d import Axes3D
 
-bad_depth = 500 #value set to areas which have 0 disparity or areas for which no disparity has been recorded
-
+bad_depth = 5 #value set to areas which have 0 disparity or areas for which no disparity has been recorded
+proj_focal_length = 150
 def init_depth_map(camera_dims):
   ''' 
     Function to define the intial size of the depth map matrix. Based on the size of the camera dimensions.
@@ -34,17 +34,22 @@ def compute_depth(event, depth_map, baseline, focal_length, scan_speed, start_ti
   
   time, y, x, _ = event #x and y are interchanged because the convention followed is different
   # Do the rotation translation on point x y and compute disparity
-  im_coord = np.dot(R.T, np.array(([x],[y],[1])) - t) + t 
-  
-  disparity = 150*im_coord[0]/(im_coord[2]*focal_length) - (time-start_time)*scan_speed #data is captured for a horizontal line hence x is used as opposed to y
+  im_coord = np.dot(R.T, np.array(([x] ,[y],[focal_length])) - 1.36*t) + 1.36*t 
+
+  new_x = proj_focal_length * im_coord[0]/(im_coord[2])
+  new_y = proj_focal_length * im_coord[1]/(im_coord[2])
+  disparity = new_x - (time-start_time)*scan_speed #data is captured for a horizontal line hence x is used as opposed to y
 
   if disparity != 0:
-    depth = focal_length * baseline/disparity
+    depth = focal_length * baseline/-disparity
   else:
     depth = bad_depth   
 
   # print("Time Elapsed:{} Disparity :{} Depth:{}".format(time-start_time, disparity, depth))
-  depth_map[int(x)][int(y)].append(depth)
+  # print("new_x:{} new_y:{}".format(new_x, new_y))
+  if new_x < 260:
+    if new_y < 346:
+      depth_map[int(x)][int(y)].append(depth)
 
 def compute_final_depth_map(depth_map):
   '''
@@ -68,8 +73,9 @@ def plot_depth_map(depth_map):
   plt.ylim(0, 259)
   image = (depth_map < 800)*depth_map
   image = (image > 0)*image
+  image = (image == 0) * 800 + image
   image = ndimage.rotate(image, 180) 
-  plt.imshow(image)
+  plt.imshow(image, cmap ='gray')
   plt.colorbar()
   plt.show()
 
@@ -112,7 +118,7 @@ def main():
 
   depth_map = init_depth_map(camera_dims)
   
-  events, start_time = read_data('Experiment-1/events copy.txt')
+  events, start_time = read_data('bear_exp_1/events.txt')
   
   for event in events:
     compute_depth(event, depth_map, baseline, focal_length, scan_speed, start_time, R,t)
