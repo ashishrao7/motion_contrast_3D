@@ -72,6 +72,22 @@ def plot_depth_map(depth_map):
   plt.imshow(image, cmap ='rainbow')
   plt.colorbar().ax.set_ylabel('depth in cm', rotation=270)
   plt.show()
+  return image
+
+def plot_3D_space(image):
+  
+  volume_vector_list = []
+  for i in range(260):
+    for j in range(346):
+      volume_vector_list.append(list((i, j, image[i][j])))
+  
+  fig = plt.figure()
+  ax = fig.add_subplot(111, projection='3d')
+  xs = np.array(volume_vector_list)[:, 0]
+  ys = np.array(volume_vector_list)[:, 1]
+  zs = np.array(volume_vector_list)[:, 2]
+  ax.scatter(xs, zs, ys)
+  plt.show()
 
 def convert_to_pcd_and_store(depth_map_matrix):
   pass 
@@ -95,9 +111,9 @@ def main():
 
   depth_map_matrix = compute_final_depth_map(depth_map)
 
-  plot_depth_map(depth_map_matrix)
+  image = plot_depth_map(depth_map_matrix)
 
-  # plot_3D_space(depth_map_matrix)
+  plot_3D_space(image)
   # convert_to_pcd_and_store(depth_map)
 
 
