@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from scipy import ndimage
 
 
-bad_depth = 100000 #value set to areas which have 0 disparity or areas for which no disparity has been recorded
+bad_depth = 100000#value set to areas which have 0 disparity or areas for which no disparity has been recorded
 
 def init_depth_map(camera_dims):
   ''' 
@@ -34,7 +34,7 @@ def compute_depth(event, depth_map, scan_speed, start_time, focal_length, baseli
   
   time, y, x, _ = event #x and y are interchanged because the convention followed is different
 
-  disparity = x - 246*((time-start_time)%(1/scan_speed))*scan_speed #data is captured for a horizontal line hence x is used as opposed to y
+  disparity = 260 + 260*((time-start_time)%(1/scan_speed))*scan_speed - x#data is captured for a horizontal line hence x is used as opposed to y
 
   if disparity != 0:
     depth = focal_length * baseline / disparity
@@ -65,9 +65,12 @@ def plot_depth_map(depth_map):
   plt.xlabel('Camera x co-ord')
   plt.xlim(0, 345)
   plt.ylim(0, 259)
-  image = ndimage.rotate(depth_map, 180) 
+  image = (depth_map < 80)*depth_map
+  image = (image > 0)*image
+  image = (image == 0) * 80 + image
+  image = ndimage.rotate(image, 180)  
   plt.imshow(image, cmap ='rainbow')
-  plt.colorbar()
+  plt.colorbar().ax.set_ylabel('depth in cm', rotation=270)
   plt.show()
 
 def convert_to_pcd_and_store(depth_map_matrix):
@@ -75,7 +78,7 @@ def convert_to_pcd_and_store(depth_map_matrix):
 
 def main():
 
-  offset = 1
+  offset = 0
 
   camera_dims = (260,346)  # Dimensions of a DAVIS346
 
@@ -84,6 +87,7 @@ def main():
   depth_map = init_depth_map(camera_dims)
   
   events,start_time = read_data('Experiment-1/events copy.txt')
+  events,start_time = read_data('Bear_exp_1/events.txt')
   focal_length, baseline = 450, 15
   
   for event in events:
