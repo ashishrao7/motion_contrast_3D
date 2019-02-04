@@ -102,8 +102,8 @@ def main():
 
   depth_map = init_depth_map(camera_dims)
   
-  #events,start_time = read_data('MC3D_data/Swan/events_3.txt')
-  events,start_time = read_data('Experiment-1/events copy.txt')
+  events,start_time = read_data('MC3D_new_data/Swan/events.txt')
+  #events,start_time = read_data('Experiment-1/events copy.txt')
   #events,start_time = read_data('Bear_exp_1/events.txt')
   focal_length, baseline = 510, 15
   
