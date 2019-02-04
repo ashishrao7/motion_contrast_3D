@@ -4,7 +4,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 from scipy import ndimage
-
+from mpl_toolkits.mplot3d import Axes3D
 
 bad_depth = 100000#value set to areas which have 0 disparity or areas for which no disparity has been recorded
 
@@ -65,9 +65,9 @@ def plot_depth_map(depth_map):
   plt.xlabel('Camera x co-ord')
   plt.xlim(0, 345)
   plt.ylim(0, 259)
-  image = (depth_map < 80)*depth_map
-  image = (image > 0)*image
-  image = (image == 0) * 80 + image
+  image = (depth_map < 100)*depth_map
+  image = (image > 0)*depth_map
+  image[image==0] = 100
   image = ndimage.rotate(image, 180)  
   plt.imshow(image, cmap ='rainbow')
   plt.colorbar().ax.set_ylabel('depth in cm', rotation=270)
@@ -102,9 +102,10 @@ def main():
 
   depth_map = init_depth_map(camera_dims)
   
+  #events,start_time = read_data('MC3D_data/Swan/events_3.txt')
   events,start_time = read_data('Experiment-1/events copy.txt')
-  events,start_time = read_data('Bear_exp_1/events.txt')
-  focal_length, baseline = 450, 15
+  #events,start_time = read_data('Bear_exp_1/events.txt')
+  focal_length, baseline = 510, 15
   
   for event in events:
     compute_depth(event, depth_map, scan_speed, start_time+offset, focal_length, baseline)
@@ -113,8 +114,8 @@ def main():
 
   image = plot_depth_map(depth_map_matrix)
 
-  plot_3D_space(image)
-  # convert_to_pcd_and_store(depth_map)
+  #plot_3D_space(image)
+  #convert_to_pcd_and_store(depth_map)
 
 
 
