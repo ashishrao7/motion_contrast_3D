@@ -35,7 +35,7 @@ def compute_depth(event, depth_map, scan_speed, start_time, focal_length, baseli
   
   time, y, x, _ = event #x and y are interchanged because the convention followed is different
 
-  disparity = 260 + 260*((time-start_time)%(1/scan_speed))*scan_speed - x#data is captured for a horizontal line hence x is used as opposed to y
+  disparity = x - ((time-start_time)%(260/scan_speed))*scan_speed   #data is captured for a horizontal line hence x is used as opposed to y
 
   if disparity != 0:
     depth = focal_length * baseline / disparity
@@ -70,26 +70,12 @@ def plot_depth_map(depth_map):
   image = (image > 0)*depth_map
   image[image==0] = 100
   image = ndimage.rotate(image, 180)  
-  plt.imshow(image, cmap ='gray')
+  plt.imshow(image, cmap ='rainbow')
   plt.colorbar().ax.set_ylabel('depth in cm', rotation=270)
   plt.show()
   print("Plotted Depth Map")
   return image
 
-def plot_3D_space(image):
-  
-  volume_vector_list = []
-  for i in range(260):
-    for j in range(346):
-      volume_vector_list.append(list((i, j, image[i][j])))
-  
-  fig = plt.figure()
-  ax = fig.add_subplot(111, projection='3d')
-  xs = np.array(volume_vector_list)[:, 0]
-  ys = np.array(volume_vector_list)[:, 1]
-  zs = np.array(volume_vector_list)[:, 2]
-  ax.scatter(xs, zs, ys)
-  plt.show()
 
 def convert_to_xyz_and_store(filename, depth_map_matrix):
  
@@ -97,13 +83,13 @@ def convert_to_xyz_and_store(filename, depth_map_matrix):
   for x in tqdm(range(depth_map_matrix.shape[0])):
     for y in range(depth_map_matrix.shape[1]):
       f.write("{}\t{}\t{}\n".format(x, y, depth_map_matrix[x][y]))
-  num_lines = sum(1 for line in f)
+  num_lines = sum([1 for line in f])
   f.close()
   print('finished preparing {}. The file has {} lines'.format(filename, num_lines))
 
 def main():
 
-  offset = 0   # offset time in seconds
+  offset = 0.0 # offset time in seconds
 
   camera_dims = (260,346)  # Dimensions of a DAVIS346
 
@@ -111,10 +97,10 @@ def main():
 
   depth_map = init_depth_map(camera_dims)
   
-  events,start_time = read_data('MC3D_new_data/Hand/events_1.txt')
+  events,start_time = read_data('MC3D_new_data/Teddy/events_1.txt')
   #events,start_time = read_data('Experiment-1/events copy.txt')
   #events,start_time = read_data('Bear_exp_1/events.txt')
-  focal_length, baseline = 500, 15
+  focal_length, baseline = 520, 15
   
   for event in events:
     compute_depth(event, depth_map, scan_speed, start_time+offset, focal_length, baseline)
@@ -123,7 +109,6 @@ def main():
 
   depth_map = plot_depth_map(depth_map_matrix)
 
-  #plot_3D_space(image)
   convert_to_xyz_and_store('3d_points.xyz', depth_map)
 
 
