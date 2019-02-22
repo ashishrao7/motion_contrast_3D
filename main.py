@@ -34,7 +34,13 @@ def compute_depth(event, depth_map, scan_speed, start_time, focal_length, baseli
   '''
   
   time, y, x, _ = event #x and y are interchanged because the convention followed is different
-
+  
+  # write logic to vet multiscan data, reject initial frame and last frame data
+  # get averages of frames 2-5, drop frames 1 and 6
+  '''  
+    Code goes here
+  
+  '''
   disparity = x - ((time-start_time)%(260/scan_speed))*scan_speed   #data is captured for a horizontal line hence x is used as opposed to y
 
   if disparity != 0:
@@ -67,7 +73,7 @@ def plot_depth_map(depth_map):
   plt.xlim(0, 345)
   plt.ylim(0, 259)
   image = (depth_map < 100)*depth_map
-  image = (image > 0)*depth_map
+  image = (image > 15)*depth_map
   image[image==0] = 100
   image = ndimage.rotate(image, 180)  
   plt.imshow(image, cmap ='rainbow')
@@ -89,7 +95,7 @@ def convert_to_xyz_and_store(filename, depth_map_matrix):
 
 def main():
 
-  offset = 0.0 # offset time in seconds
+  offset = 0.2 # offset time in seconds
 
   camera_dims = (260,346)  # Dimensions of a DAVIS346
 
@@ -97,9 +103,9 @@ def main():
 
   depth_map = init_depth_map(camera_dims)
   
-  events,start_time = read_data('MC3D_new_data/Teddy/events_1.txt')
+  events,start_time = read_data('MC3D_new_data/Teddy/events_3.txt')
   #events,start_time = read_data('Experiment-1/events copy.txt')
-  #events,start_time = read_data('Bear_exp_1/events.txt')
+  #events,start_time = read_data('Teddy_multiscan_6/events_view_1.txt')
   focal_length, baseline = 520, 15
   
   for event in events:
