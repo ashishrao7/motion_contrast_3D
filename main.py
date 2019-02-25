@@ -7,7 +7,7 @@ from scipy import ndimage
 from mpl_toolkits.mplot3d import Axes3D
 from tqdm import tqdm
 
-bad_depth = 100#value set to areas which have 0 disparity or areas for which no disparity has been recorded
+bad_depth = 100 # value set to areas which have 0 disparity or areas for which no disparity has been recorded
 
 def init_depth_map(camera_dims):
   ''' 
