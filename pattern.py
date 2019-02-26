@@ -67,7 +67,6 @@ class sinusoid_2d(Pattern):
     def __init__(self, height, width, fps, frequency, bits_shifted):
         Pattern.__init__(self, height, width, fps)
         self.f = frequency
-        self.Fs = 5000 # Sampling Frequency
         self.pixel_shift = bits_shifted
 
     def generate_moving_sine(self, type):
@@ -86,8 +85,9 @@ class sinusoid_2d(Pattern):
         
         if type=='horizontal':
             print('generating video of horizontal sine based phase patterns')
-            x = np.arange(self.width)
-            y = np.sin(2 * np.pi * x * self.f / self.Fs) 
+            dt =  1/self.width
+            x = np.arange(0, self.width, dt)
+            y = np.sin(2 * np.pi * x * self.f) 
             
             y += max(y) # to shift range of signals to positive values
 
@@ -100,8 +100,9 @@ class sinusoid_2d(Pattern):
 
         if type=='vertical':
             print('generating video of horizontal sine based phase patterns')
-            x = np.arange(self.height)
-            y = np.sin(2 * np.pi * x * self.f / self.Fs) 
+            dt =  1/self.height
+            x = np.arange(0, self.height, dt)
+            y = np.sin(2 * np.pi * x * self.f) 
             
             y += max(y)  # to shift range of signals to positive values
 
