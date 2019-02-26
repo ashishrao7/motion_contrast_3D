@@ -64,9 +64,10 @@ class Line(Pattern):
 
 class sinusoid_2d(Pattern):
     # generate moving phase patterns 
-    def __init__(self, height, width, fps, period, bits_shifted):
+    def __init__(self, height, width, fps, frequency, bits_shifted):
         Pattern.__init__(self, height, width, fps)
-        self.period = period
+        self.f = frequency
+        self.Fs = 5000 # Sampling Frequency
         self.pixel_shift = bits_shifted
 
     def generate_moving_sine(self, type):
@@ -86,9 +87,9 @@ class sinusoid_2d(Pattern):
         if type=='horizontal':
             print('generating video of horizontal sine based phase patterns')
             x = np.arange(self.width)
-            y = np.sin(2 * np.pi * x / self.period) 
+            y = np.sin(2 * np.pi * x * self.f / self.Fs) 
             
-            y += max(y)
+            y += max(y) # to shift range of signals to positive values
 
             frame = np.array([[y[j]*127 for j in range(346)] for i in range(260)], dtype=np.uint8) # create 2-D array of sine-wave
             
@@ -100,13 +101,13 @@ class sinusoid_2d(Pattern):
         if type=='vertical':
             print('generating video of horizontal sine based phase patterns')
             x = np.arange(self.height)
-            y = np.sin(2 * np.pi * x / self.period) 
+            y = np.sin(2 * np.pi * x * self.f / self.Fs) 
             
-            y += max(y)
+            y += max(y)  # to shift range of signals to positive values
 
             frame = np.array([[y[j]*127 for j in range(260)] for i in range(346)], dtype=np.uint8).T # create 2-D array of sine-wave
             
-            for _ in range(0, self.height):
+            for i in range(0, self.height):
                 self.video.write(cv2.cvtColor(frame,cv2.COLOR_GRAY2RGB))
                 shifted_frame =  np.roll(frame, self.pixel_shift, axis=0)
                 frame = shifted_frame 

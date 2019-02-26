@@ -7,7 +7,7 @@ def main():
     #line.generate_moving_line('horizontal')
     #line.generate_moving_line('tl_diag')
     #line.generate_moving_line('bl_diag')
-    sine_image = pattern.sinusoid_2d(260, 346, 120, 250, 1) 
+    sine_image = pattern.sinusoid_2d(260, 346, 50, 250, 1) 
     sine_image.generate_moving_sine('vertical')
     #sine_image.generate_moving_sine('horizontal')
     
