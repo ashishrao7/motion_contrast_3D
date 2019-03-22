@@ -7,8 +7,9 @@ def main():
     #line.generate_moving_line('horizontal')
     #line.generate_moving_line('tl_diag')
     #line.generate_moving_line('bl_diag')
-    sine_image = pattern.sinusoid_2d(260, 346, 30, 250, 1) 
-    sine_image.generate_moving_sine('vertical')
+    wave_image = pattern.wave_2d(260, 346, 30, 10, 1) 
+    wave_image.generate_moving_wave('vertical', 'square')
+    wave_image.generate_moving_wave('vertical', 'sine')
     #sine_image.generate_moving_sine('horizontal')
     
     print('generation done')
