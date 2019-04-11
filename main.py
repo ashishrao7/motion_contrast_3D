@@ -2,6 +2,7 @@
 
 
 import numpy as np 
+import cv2
 import matplotlib.pyplot as plt
 from scipy import ndimage
 from mpl_toolkits.mplot3d import Axes3D
@@ -26,8 +27,22 @@ def read_data(path):
   file.close()
   return events, start_time
 
+def compute_depth_raster_scanning(event, depth_map, scan_speed, start_time, focal_length, baseline, camera_dims):
+  
+  time, y, x, _ = event #x and y are interchanged because the convention followed is different
+  if scan_speed*time > camera_dims[1]:
+    start_time = time
+  
+  disparity = y - ((time-start_time)%(camera_dims[1]/scan_speed))*scan_speed   #horizontal stereo pair used here 
+  if disparity != 0:
+    depth = focal_length * baseline / disparity
+  else:
+    depth = bad_depth   
+  depth_map[int(x)][int(y)].append(depth)
+  return start_time, x
 
-def compute_depth(event, depth_map, scan_speed, start_time, focal_length, baseline):
+
+def compute_depth_line_scanning(event, depth_map, scan_speed, start_time, focal_length, baseline):
   '''
     Compute depth for each pixel in the depth map. Some pixels could have multiple depths due to multiple activations on the event camera. All the possible values are stored as a list in the 
     corresponding pixel loction. The formula used to calculate depth is the one described in Matsuda et al.
@@ -72,16 +87,32 @@ def plot_depth_map(depth_map):
   plt.xlabel('Camera x co-ord')
   plt.xlim(0, 345)
   plt.ylim(0, 259)
+
   image = (depth_map < 100)*depth_map
   image = (image > 15)*depth_map
   image[image==0] = 100
+  image = image.astype(np.uint8)
+  image = cv2.medianBlur(image, 3)
   image = ndimage.rotate(image, 180)  
-  plt.imshow(image, cmap ='rainbow')
+  plt.imshow(image, cmap ='gray')
   plt.colorbar().ax.set_ylabel('depth in cm', rotation=270)
   plt.show()
   print("Plotted Depth Map")
   return image
 
+def make_video(image_folder):  
+  video_name = 'videos/MC3D_moving.avi'
+
+  images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
+  frame = cv2.imread(os.path.join(image_folder, images[0]))
+  height, width, layers = frame.shape
+
+  video = cv2.VideoWriter(video_name, 0, 30, (width,height))
+
+  for image in images:
+      video.write(cv2.imread(os.path.join(image_folder, image)))
+  cv2.destroyAllWindows()
+  video.release()
 
 def convert_to_xyz_and_store(filename, depth_map_matrix):
  
@@ -93,31 +124,57 @@ def convert_to_xyz_and_store(filename, depth_map_matrix):
   f.close()
   print('finished preparing {}. The file has {} lines'.format(filename, num_lines))
 
-def main():
+def main_line_scanning():
 
-  offset = 0.2 # offset time in seconds
-
+  offset = 0.5 # offset time in seconds
   camera_dims = (260,346)  # Dimensions of a DAVIS346
-
   scan_speed = 60     # pixels per second coverge , determined by pattern generatad in generator.py
-
   depth_map = init_depth_map(camera_dims)
-  
-  events,start_time = read_data('MC3D_new_data/Swan/events_1.txt')
+  events,start_time = read_data('MC3D_new_data/Steel_bottle/events_1.txt')
   #events,start_time = read_data('Experiment-1/events copy.txt')
   #events,start_time = read_data('Teddy_multiscan_6/events_view_1.txt')
-  focal_length, baseline = 520, 15
+  focal_length, baseline = 410, 15
   
   for event in events:
-    compute_depth(event, depth_map, scan_speed, start_time+offset, focal_length, baseline)
+    compute_depth_line_scanning(event, depth_map, scan_speed, start_time+offset, focal_length, baseline)
 
   depth_map_matrix = compute_final_depth_map(depth_map)
-
   depth_map = plot_depth_map(depth_map_matrix)
-
   convert_to_xyz_and_store('3d_points.xyz', depth_map)
+
+def main_raster_scanning():
+  
+
+  offset = 0.5 # Should be between 0 and 1/60 seconds
+  camera_dims = (260,346)  # Dimensions of a DAVIS346
+  scan_speed = 1/(60*camera_dims[0])     # raster scan speed of the projector
+  depth_map = init_depth_map(camera_dims)
+  
+  events,start_time = read_data('') #event data with a white image pattern overlaid on the object to be scanned
+  start_time += offset
+  focal_length, baseline = 410, 15
+  
+  row_counter, frame = 0, 0, 0 #maintain row count for raster scanning, frame number of video image naming
+  
+  
+  for event in events:   
+    if event[0]-start_time >= 1/60: 
+      start_time = event[0]
+      depth_map_matrix = compute_final_depth_map(depth_map)
+      depth_image = plot_depth_map(depth_map_matrix)
+      cv2.imwrite('MC3D_video_mode/' + str(frame).zfill(3)+'.png', depth_image)
+      depth_map = init_depth_map(camera_dims)
+      frame+=1
+
+    else:
+      start_time, row_counter = compute_depth_raster_scanning(event, depth_map, scan_speed, start_time, focal_length, baseline, camera_dims)
+      
+    #frame splitting issues exist in this routine above look into correcting it
+    
+    make_video('MC3D_video_mode/')
+
 
 
 
 if __name__=='__main__':
-    main()
+    main_raster_scanning()
