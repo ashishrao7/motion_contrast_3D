@@ -154,7 +154,7 @@ def main_raster_scanning():
   start_time += offset
   focal_length, baseline = 410, 15
   
-  row_counter, frame = 0, 0, 0 #maintain row count for raster scanning, frame number of video image naming
+  row_counter, frame = 0, 0 #maintain row count for raster scanning, frame number of video image naming
   
   
   for event in events:   
