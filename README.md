@@ -26,7 +26,7 @@ Below are some of the results of the Implementation.
     </tr>
     <tr>
         <td style="text-align:center"> <img src="Images/Swan.png"> </td>
-        <td style="text-align:center"> <img src="Images/teddy_face.png"> </td>
+        <td style="text-align:center"> <img src="Images/teddy_face.png" style="width:260px;height:346x;"> </td>
         <td style="text-align:center"> <img src="Images/teddy_poisson.png"> </td>
     </tr>
 </table>
