@@ -1,21 +1,51 @@
-# This file defines the pattern generator used in the experiment
+#######################################################################################
+#This library is used to generate moving patterns
+# Author: Ashish Rao M
+# email: ashish.rao.m@gmail.com
+#######################################################################################
 
 import cv2
 import numpy as np
 from scipy import signal
-from cv2 import VideoWriter, VideoWriter_fourcc
 from matplotlib import pyplot as plt
+from cv2 import VideoWriter, VideoWriter_fourcc
+
 
 class Pattern:
-     def __init__(self, height, width, fps):
-         self.width = width
-         self.height = height 
-         self.fps = fps
-         self.fourcc = VideoWriter_fourcc(*'MP42')
+    '''
+    General structure for moving patterns
+        
+    Init Parameters:
+    ----------------
+    height: <int>
+        Height of video resolution
+
+    width: <int>
+        width of the video resolution
+    
+    fps: <int>
+        Number of frames per seconds
+
+    '''
+    def __init__(self, height, width, fps):
+        self.width = width
+        self.height = height 
+        self.fps = fps
+        self.fourcc = VideoWriter_fourcc(*'MP42')
 
 
 class Line(Pattern):
+    '''
+    Class to generate moving lines of different thicknesses, orientations and speeds
+    
+    Init Parameters:
+    ----------------
+    thickness: <int>
+        pixelwise thickness of the moving line pattern
+
+    '''
     def __init__(self, height, width, fps, thickness):
+
         Pattern.__init__(self, height, width, fps)
         self.thickness = thickness
 
@@ -25,11 +55,11 @@ class Line(Pattern):
         
         Parameters:
         -----------
-            direction: <string>
-                Defines the direction in which the line has to move
+        direction: <string>
+            Defines the direction in which the line has to move
 
         Return: None
-        -------
+        ------------
         '''
         self.video = VideoWriter('./videos/' + direction + 'line_pattern_gen_'+str(self.fps)+'_bit.avis', self.fourcc, float(self.fps), (self.width, self.height))
         
@@ -64,26 +94,42 @@ class Line(Pattern):
         cv2.destroyAllWindows()
         self.video.release()
 
-class wave_2d(Pattern):
+class Wave_2d(Pattern):
+    '''
+    Class to generate moving wave patterns
+    
+    Init Parameters:
+    ----------------
+    frequency: <int>
+        Spatial frequency of the wave patterns
+    
+    pixel_shifted: <int>
+        Number of pixels to shift by in two successive frames of the video 
+
+    '''
+    
     # generate moving  patterns 
-    def __init__(self, height, width, fps, frequency, bits_shifted):
+    def __init__(self, height, width, fps, frequency, pixel_shifted):
         Pattern.__init__(self, height, width, fps)
         self.f = frequency
-        self.pixel_shift = bits_shifted
+        self.pixel_shift = pixel_shifted
 
     def generate_moving_wave(self, direction, type):
         '''
-            Generate moving swave whose direction is defined by the variable direction
+        Generate moving wave whose direction is defined by the variable, direction.
         
         Parameters:
         -----------
-            direction: <string>
-                Defines the direction in which the line has to move
+        direction: <string>
+                Defines the direction in which the wave has to move
+
+        type: <string>
+            The type of wave being generated> Square and Sinusoidal waves have been implemented for now.
 
         Return: None
         -------
         '''
-        self.video = VideoWriter('./videos/' + direction + '_'+type + '_' + str(self.f) + 'hz_pattern_gen_'+str(self.fps) + '_fps.mkv', self.fourcc, float(self.fps), (self.width, self.height))
+        self.video = VideoWriter('./videos/' + type +'/' + direction + '_'+type + '_' + str(self.f) + 'hz_pattern_gen_'+str(self.fps) + '_fps.mkv', self.fourcc, float(self.fps), (self.width, self.height))
         
         if direction=='horizontal':
             print('generating video of horizontal wave based phase patterns')
@@ -97,11 +143,11 @@ class wave_2d(Pattern):
             
             y += max(y) # to shift range of signals to positive values
 
-            frame = np.array([[y[j]*127 for j in range(346)] for i in range(260)], dtype=np.uint8) # create 2-D array of sine-wave
+            frame = np.array([[y[j]*127 for j in range(self.width)] for i in range(self.height)], dtype=np.uint8) # create 2-D array of sine-wave
             
             for _ in range(0, self.width):
                 self.video.write(cv2.cvtColor(frame,cv2.COLOR_GRAY2RGB))
-                shifted_frame =  np.roll(frame, self.pixel_shift, axis=1)
+                shifted_frame =  np.roll(frame, self.pixel_shift, axis=1)  # simulated the circular shifting effect to make it a continuous
                 frame = shifted_frame 
 
         if direction=='vertical':
@@ -116,7 +162,7 @@ class wave_2d(Pattern):
             
             y += max(y)  # to shift range of signals to positive values
 
-            frame = np.array([[y[j]*127 for j in range(260)] for i in range(346)], dtype=np.uint8).T # create 2-D array of sine-wave
+            frame = np.array([[y[j]*127 for j in range(self.width)] for i in range(self.height)], dtype=np.uint8).T  # create 2-D array of sine-wave. Transpose it to make it vertical
             
             for _ in range(0, self.height):
                 self.video.write(cv2.cvtColor(frame,cv2.COLOR_GRAY2RGB))
@@ -125,4 +171,6 @@ class wave_2d(Pattern):
             
         cv2.destroyAllWindows()
         self.video.release()
+    
+        print('generation of moving patterns done')
             

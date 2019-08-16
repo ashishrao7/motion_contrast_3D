@@ -9,6 +9,25 @@ An object is placed on a platform and a moving light source generated in `genera
 The event camera, placed in a stereo configuration with the <a href="http://www.ti.com/tool/DLPLCR4500EVM">light projector</a> ,records the bending of the incident light. This property is used to calculate the depth of the scene specified in more detail in the paper.
 
 
+To run the files execute with the following command 
+
+'python main.py'
+
+To run for different object change the 'obj' and 'offset' variables in the 'main_line_scanning()' function. In case you are using a camera other than DAVIS346, camera dimensions can be changed by changing the 'cam_dims' variable. The output is a .xyz file. The .xyz files can be imported in meshlab and meshed to get 3D results.
+
+Below are some of the results of the Implementation.
+
+| ![alt text][result1] | ![alt text][result2] | ![alt text][result3] |
+| ![alt text][result4] | ![alt text][result5] | ![alt text][result6] |
+
+
+[result1]: Images/Buddha.png        "Buddha"
+[result2]: Images/Hand.png          "Hand"
+[result3]: Images/Hand_2.png        "Hand"
+[result4]: Images/Swan.png          "Swan"
+[result5]: Images/teddy_face.png    "Teddy"
+[result6]: Images/teddy_poisson.png "Teddy"
+
 To understand how events occur in an event based camera, please watch the video at this <a href="https://www.youtube.com/watch?v=kPCZESVfHoQ">link.</a>
 
 Below are the links to different types of Event Cameras,
