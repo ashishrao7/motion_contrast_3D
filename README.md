@@ -11,9 +11,9 @@ The event camera, placed in a stereo configuration with the <a href="http://www.
 
 To run the files execute with the following command 
 
-'python main.py'
+`python main.py`
 
-To run for different object change the 'obj' and 'offset' variables in the 'main_line_scanning()' function. In case you are using a camera other than DAVIS346, camera dimensions can be changed by changing the 'cam_dims' variable. The output is a .xyz file. The .xyz files can be imported in meshlab and meshed to get 3D results.
+To run for different object change the `obj` and `offset` variables in the `main_line_scanning()` function in the `main.py` file. In case you are using a camera other than DAVIS346, camera dimensions can be changed by changing the `cam_dims` variable. The output is a .xyz file. The .xyz files can be imported in meshlab and meshed to get 3D results.
 
 Below are some of the results of the Implementation.
 
