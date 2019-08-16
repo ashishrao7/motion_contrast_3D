@@ -17,16 +17,20 @@ To run for different object change the 'obj' and 'offset' variables in the 'main
 
 Below are some of the results of the Implementation.
 
-| ![alt text][result1] | ![alt text][result2] | ![alt text][result3] |
-| ![alt text][result4] | ![alt text][result5] | ![alt text][result6] |
 
+<table style="width:100%">
+    <tr>
+        <td style="text-align:center"><img src="Images/Buddha.png"> </td>
+        <td style="text-align:center"><img src="Images/Hand.png"> </td>
+        <td style="text-align:center"><img src="Images/Hand_2.png"> </td>
+    </tr>
+    <tr>
+        <td style="text-align:center"> <img src="Images/Swan.png"> </td>
+        <td style="text-align:center"> <img src="Images/teddy_face.png"> </td>
+        <td style="text-align:center"> <img src="Images/teddy_poisson.png"> </td>
+    </tr>
+</table>
 
-[result1]: Images/Buddha.png        "Buddha"
-[result2]: Images/Hand.png          "Hand"
-[result3]: Images/Hand_2.png        "Hand"
-[result4]: Images/Swan.png          "Swan"
-[result5]: Images/teddy_face.png    "Teddy"
-[result6]: Images/teddy_poisson.png "Teddy"
 
 To understand how events occur in an event based camera, please watch the video at this <a href="https://www.youtube.com/watch?v=kPCZESVfHoQ">link.</a>
 
