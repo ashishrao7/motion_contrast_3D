@@ -4,7 +4,14 @@ This repo contains implementation of the motion contrast 3-D Scanning method pro
 
 The data in the experiments folder have been collected from a DAVIS346 Camera. The  <a href="https://github.com/uzh-rpg/rpg_dvs_ros">drivers </a> developed by the robotics and perception group were used to collect data from the DAVIS. 
 
-An object is placed on a platform and a moving light source generated in `generator.py` is made to fall on the object. The videos folder contains different light sources generated using the generator file.
+An object is placed on a platform and a moving light source generated in `generator.py` is made to fall on the object. The videos folder contains different light sources generated using the generator file. The gif on the left shows the experimental setup and the gif on the right shows the events visualised by accumulating them to frames at a particular rate
+
+<table style="width:100%">
+    <tr>
+        <td style="text-align:center"><img src="Images/mc3d_setup.gif"> </td>
+        <td style="text-align:center"><img src="Images/visualize.gif"> </td>
+    </tr>
+</table>
 
 The event camera, placed in a stereo configuration with the <a href="http://www.ti.com/tool/DLPLCR4500EVM">light projector</a> ,records the bending of the incident light. This property is used to calculate the depth of the scene specified in more detail in the paper.
 
